@@ -6,7 +6,6 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Garbage Classifier</h1>
                 <UploadForm />
             </header>
         </div>
