@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './UploadForm.module.css';
 
 const UploadForm = () => {
@@ -8,6 +8,10 @@ const UploadForm = () => {
     const [cameraOpen, setCameraOpen] = useState(false);
 
     const videoRef = useRef();
+
+    useEffect(() => {
+        console.log('Prediction state updated:', prediction);
+    }, [prediction]);
 
     const handleFileChange = (event) => {
         const uploadedFile = event.target.files[0];
@@ -61,13 +65,18 @@ const UploadForm = () => {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://127.0.0.1:5000/predict', {
-            method: 'POST',
-            body: formData,
-        });
+        try {
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                body: formData,
+            });
 
-        const result = await response.json();
-        setPrediction(result.class);
+            const result = await response.json();
+            console.log('API response:', result); // Log the response to check its structure
+            setPrediction(result.predicted_class); // Update this line to match the response structure
+        } catch (error) {
+            console.error('Error fetching prediction:', error);
+        }
     };
 
     const handleClear = () => {
@@ -78,9 +87,6 @@ const UploadForm = () => {
     return (
         <div className={styles.container}>
             <h1 className={styles.h1}>Garbage Classifier</h1>
-            {/* <form onSubmit={handleSubmit} className={styles.form}>
-                <input type="file" onChange={handleFileChange} />
-            </form> */}
             <label htmlFor="file" className={styles['custum-file-upload']}>
                 <div className={styles.icon}>
                     <svg viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg">
