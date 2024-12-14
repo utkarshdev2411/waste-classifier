@@ -40,6 +40,7 @@ def predict():
         predicted_class_index = predict_single_image(file_path, model)
         class_names = ['battery', 'biological', 'cardboard', 'clothes', 'glass', 'metal', 'paper', 'plastic', 'shoes']
         predicted_class_name = class_names[predicted_class_index]
+        print(predicted_class_name)
         return jsonify({'predicted_class': predicted_class_name})
 
 if __name__ == '__main__':
